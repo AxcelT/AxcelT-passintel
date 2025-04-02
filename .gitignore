@@ -1,0 +1,26 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment files
+.env
+config.env
+
+# Virtual environments
+venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# AWS credentials
+.aws/
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs and output
+*.log
