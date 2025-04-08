@@ -4,6 +4,7 @@ import os
 import sys
 import hashlib
 import requests
+import json
 from getpass import getpass
 from dotenv import load_dotenv
 
@@ -88,32 +89,46 @@ def estimate_strength(password):
     
     return score, suggestions
 
+def call_aws_api(sha1_password):
+    api_url = os.getenv("AWS_API_URL")
+    payload = {"hash": sha1_password}
+    try:
+        response = requests.post(api_url, json=payload)
+        if response.status_code != 200:
+            print(f"Error calling AWS API: {response.status_code}")
+            return None
+        return json.loads(response.text)
+    except Exception as e:
+        print("AWS API request error:", e)
+        return None
+
 def main():
     # Load environment variables from config.env
     load_dotenv("config.env")
-    hibp_api_key = os.getenv("HIBP_API_KEY")  # Not used for the pwned passwords endpoint
-    
     print("=== AxcelT-passintel Password Auditor ===")
     password = getpass("Enter your password: ")
     if not password:
         print("No password entered. Exiting.")
-        sys.exit(1)
+        return
     
     hashed_password = sha1_hash(password)
     print("Password hashed using SHA1.")
-    
-    # Check the password against HaveIBeenPwned
-    breach_count = check_pwned(hashed_password)
+
+    # Instead of doing the HIBP check locally, call the AWS API
+    aws_result = call_aws_api(hashed_password)
+    if aws_result is None:
+        print("Failed to get response from AWS API")
+        return
     
     # Estimate the password strength
     strength_score, suggestions = estimate_strength(password)
     
     print("\n--- Password Audit Results ---")
     print(f"Strength Score: {strength_score}/100")
-    if breach_count > 0:
-        print(f"⚠️  Warning: Your password was found in {breach_count} breach(es)!")
+    if aws_result.get("pwned"):
+        print(f"⚠️ Warning: Your password was found in {aws_result.get('breach_count')} breach(es)!")
     else:
-        print("✅  Good news: Your password was not found in any breaches.")
+        print("✅ Good news: Your password was not found in any breaches.")
     
     if suggestions:
         print("\nSuggestions to improve your password:")
@@ -121,6 +136,7 @@ def main():
             print(f" - {suggestion}")
     else:
         print("\nYour password meets the basic complexity requirements!")
+
     
 if __name__ == "__main__":
     main()

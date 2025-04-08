@@ -23,3 +23,12 @@ This tool serves as a portfolio project for demonstrating both cybersecurity fun
    ```bash
    git clone https://github.com/yourusername/AxcelT-passintel.git
    cd AxcelT-passintel
+
+## AWS Deployment Instructions
+
+### Setting up the Lambda Function
+1. Navigate to the `lambda/` directory.
+2. Zip the contents (make sure `handler.py` is at the root of the zip):
+   ```bash
+   cd lambda
+   zip -r ../lambda.zip *

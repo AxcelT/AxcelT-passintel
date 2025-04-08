@@ -24,3 +24,16 @@ Thumbs.db
 
 # Logs and output
 *.log
+
+# Ignore Lambda dependency folders but keep handler.py
+lambda/certifi/
+lambda/certifi-*.dist-info/
+lambda/charset_normalizer/
+lambda/charset_normalizer-*.dist-info/
+lambda/idna/
+lambda/idna-*.dist-info/
+lambda/requests/
+lambda/requests-*.dist-info/
+lambda/urllib3/
+lambda/urllib3-*.dist-info/
+lambda/bin
