@@ -27,8 +27,4 @@ This tool serves as a portfolio project for demonstrating both cybersecurity fun
 ## AWS Deployment Instructions
 
 ### Setting up the Lambda Function
-1. Navigate to the `lambda/` directory.
-2. Zip the contents (make sure `handler.py` is at the root of the zip):
-   ```bash
-   cd lambda
-   zip -r ../lambda.zip *
+1. Just upload the zip file in the directory.
